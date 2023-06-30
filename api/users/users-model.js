@@ -1,8 +1,15 @@
+const db = require('../../data/db-config')
+
+module.exports = {
+  find
+}
+
 /**
   resolves to an ARRAY with all users, each user having { user_id, username }
  */
-function find() {
-
+async function find() {
+  const users = await db('users')
+  return users
 }
 
 /**
