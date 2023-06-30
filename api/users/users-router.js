@@ -10,15 +10,6 @@ router.get('/', (req, res, next) => {
     .catch(next)
 })
 
-router.get("/:id", (req, res, next) => {
-  Users.findById(req.params.id)
-    .then((user) => {
-      res.json(user)
-      
-    })
-    .catch(next)
-})
-
 // Require the `restricted` middleware from `auth-middleware.js`. You will need it here!
 
 /**

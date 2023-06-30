@@ -2,10 +2,19 @@
 // middleware functions from `auth-middleware.js`. You will need them here!
 const express = require('express');
 const router = express.Router();
+const Users = require('../users/users-model')
  
 router.get('/', (req, res) => {
   res.json({message: "Let's go hunting"})
 })
+
+router.post('/', (req, res, next) => {
+  Users.add(req.body)
+    .then(id => {
+      res.json(id)
+    })
+})
+
 
 
 /**
@@ -65,6 +74,12 @@ router.get('/', (req, res) => {
   }
  */
 
- 
+router.use((error, req, res, next) => {
+  res.status(error.status || 500).json({
+    message: error.message,
+    customMessage: "Something broke in the users-router"
+  })
+});
+
 // Don't forget to add the router to the `exports` object so it can be required in other modules
 module.exports = router;
