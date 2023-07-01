@@ -34,7 +34,7 @@ async function findById(user_id) {
  */
 async function add(user) {
   const [id] = await db('users').insert(user)
-  return id
+  return findById(id)
 }
 
 // Don't forget to add these to the `exports` object so they can be required in other modules
