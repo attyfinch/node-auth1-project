@@ -47,6 +47,21 @@ router.post('/register', checkPasswordLength, checkUsernameFree, async (req, res
   }
  */
 
+router.post('/login', async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    const [user] = await Users.findBy({ username})
+    if (user && bcrypt.compareSync(password, user.password)) {
+      req.session.user = user
+      res.json({message: `Welcome ${username}`})
+    } else {
+      next({ status: 401, message: "Invalid credentials"})
+    }
+  } catch (err) {
+    next(err)
+  }
+})
+
 
 /**
   2 [POST] /api/auth/login { "username": "sue", "password": "1234" }
@@ -63,6 +78,21 @@ router.post('/register', checkPasswordLength, checkUsernameFree, async (req, res
     "message": "Invalid credentials"
   }
  */
+
+router.get('/logout', (req, res, next) => {
+  if (req.session.user) {
+    req.session.destroy(err => {
+        if (err) {
+            next({ status: 200, message: "no session"})
+        } else {
+            res.set('Set-Cookie', 'chocolatechip=; SameSite=Strict; Path=/; Expires=Mon, 01 Jan 1970 00:00:00`')
+            res.status(200).json({message: "logged out"})
+        }
+    })
+} else {
+    res.json({message: "no session"})
+}
+})
 
 
 /**
